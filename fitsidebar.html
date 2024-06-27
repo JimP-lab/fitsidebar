@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="settings.css">
+    <link rel="stylesheet" href="tables.css">
+    <script src="tables.js"></script>
+    <script src="settings.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            background-color: white; /* Background color for the sidebar */
+            padding: 10px 0;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+        .sidebar a {
+            color: black; /* Text color */
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sidebar a i {
+            margin-bottom: 5px;
+        }
+        .sidebar a img {
+            margin-bottom: 5px;
+        }
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 60px); /* Full height minus the sidebar height */
+            text-align: center;
+            padding: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        .options-container .option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 300px;
+            background-color: black;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .options-container .option span {
+            color: white;
+            margin-right: 10px;
+        }
+        .options-container button {
+            background-color: blue;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .options-container button:hover {
+            background-color: darkblue;
+        }
+        .logout-button {
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 300px;
+        }
+        .logout-button:hover {
+            background-color: darkgray;
+        }
+    </style>
+</head>
+<body class="bg-orange-300 text-white">
+    <div class="content" id="content">
+        <h2>Welcome, ${username}!</h2>
+    </div>
+    <div class="sidebar">
+        <a href="#" class="text-center" onclick="showContent('tracking')">
+            <img src="https://img.icons8.com/material-rounded/24/home.png" alt="home" class="home-icon">
+            <div>Tracking</div>
+        </a>
+        <a href="#" class="text-center" onclick="showContent('profile')">
+            <img src="https://img.icons8.com/ios-filled/50/000000/user-male-circle.png" alt="Profile Icon" class="chart-icon">
+            <div>Profile</div>
+        </a>
+    </div>
+    <script>
+        function showContent(option) {
+            var contentDiv = document.getElementById("content");
+            var text = "";
+          // Check which option was clicked and display corresponding content
+            switch(option) {
+                case 'tracking':
+                    text = `<table class="table mb-8">
+                                <tr>
+                                    <!-- Exercise Category -->
+                                    <td class="pr-4">
+                                        <h2 class="text-2xl font-bold mb-4">Exercise</h2>
+                                        <button class="btn btn-primary mb-4" onclick="showForm('exerciseForm')">Exercise</button>
+                                        <button class="btn btn-primary mb-4" onclick="showForm('repsForm')">Reps</button>
+                                        <button class="btn btn-primary mb-4" onclick="showForm('timeForm')">Time</button>
+                                        <form id="exerciseForm" class="hidden">
+                                            <label for="exerciseName" class="block text-sm font-medium text-gray-600">Exercise</label>
+                                            <input type="text" id="exerciseName" name="exerciseName" class="mt-1 p-2 w-full border rounded-md">
+                                            <button type="button" class="btn btn-primary mt-4" onclick="addExercise()">Add Exercise</button>
+                                        </form>
+                                        <form id="repsForm" class="hidden">
+                                            <label for="reps" class="block text-sm font-medium text-gray-600">Reps</label>
+                                            <input type="number" id="reps" name="reps" class="mt-1 p-2 w-full border rounded-md">
+                                            <button type="button" class="btn btn-primary mt-4" onclick="addReps()">Add Reps</button>
+                                        </form>
+                                        <form id="timeForm" class="hidden">
+                                            <label for="time" class="block text-sm font-medium text-gray-600">Time</label>
+                                            <input type="text" id="time" name="time" class="mt-1 p-2 w-full border rounded-md">
+                                            <button type="button" class="btn btn-primary mt-4" onclick="addTime()">Add Time</button>
+                                        </form>
+                                        <ul id="exerciseList" class="category-list"></ul>
+                                    </td>
+                                    <!-- Meals Category -->
+                                    <td class="pr-4">
+                                        <h2 class="text-2xl font-bold mb-4">Meals</h2>
+                                        <button class="btn btn-primary mb-4" onclick="showForm('mealsForm')">Meals</button>
+                                        <form id="mealsForm" class="hidden">
+                                            <label for="mealsValue" class="block text-sm font-medium text-gray-600">Meals</label>
+                                            <input type="text" id="mealsValue" name="mealsValue" class="mt-1 p-2 w-full border rounded-md">
+                                            <button type="button" class="btn btn-primary mt-4" onclick="addMeals()">Add Meals</button>
+                                        </form>
+                                        <ul id="mealsList" class="category-list"></ul>
+                                    </td>
+                                    <!-- Health Category -->
+                                    <td>
+                                        <h2 class="text-2xl font-bold mb-4">Health</h2>
+                                        <!-- Remove the buttons for weight and height -->
+                                        <button class="btn btn-purple mb-4" onclick="showForm('sleepForm')">Sleep</button>
+                                        <form id="sleepForm" class="hidden">
+                                            <label for="sleepDuration" class="block text-sm font-medium text-gray-600">Sleep Duration (hours)</label>
+                                            <input type="number" id="sleepDuration" name="sleepDuration" class="mt-1 p-2 w-full border rounded-md">
+                                            <button type="button" class="btn btn-purple mt-4" onclick="addSleep()">Add Sleep</button>
+                                        </form>
+                                        <ul id="healthList" class="category-list"></ul>
+                                    </td>
+                                </tr>
+                            </table>`;
+                    break;
+                case 'profile':
+                    text = `
+                            <div class="options-container">
+                                <div class="option">
+                                    <span>Change Password</span>
+                                    <button onclick="changePassword()">Change Password</button>
+                                </div>
+                                <div class="option">
+                                    <span>Contact Support</span>
+                                    <button onclick="contactSupport()">Contact Support</button>
+                                </div>
+                                <div class="option">
+                                    <span>Delete Account</span>
+                                    <button onclick="deleteAccount()">Delete Account</button>
+                                </div>
+                                <div class="option">
+                                    <button onclick="logout()">Log Out</button>
+                                </div>
+                            </div>`;
+                    break;
+                // Add more cases for additional options
+                default:
+            }
+
+            contentDiv.innerHTML = text;
+        }
+    </script>
+</body>
+</html>
