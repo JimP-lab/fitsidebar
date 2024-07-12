@@ -1,251 +1,121 @@
-
-function showForm(formId) {
-    // Hide all forms
-    document.querySelectorAll('form').forEach(form => form.classList.add('hidden'));
-    // Show the selected form
-    document.getElementById(formId).classList.remove('hidden');
-}
-
-function addItemToList(category, data) {
-    const list = document.getElementById(category + 'List');
-    const listItem = document.createElement('li');
-    listItem.textContent = data;
-    list.appendChild(listItem);
-}
-function addMeals() {
-    const mealsValue = document.getElementById('mealsValue').value.trim();
-
-    // Check if mealsValue is not empty before proceeding
-    if (mealsValue === "") {
-        alert('enter a value.');
-        return;
-    }
-
-    // Check if the meal already exists in the list
-    const mealsList = document.getElementById('mealsList');
-    if (mealsList.innerHTML.includes(`Meals: ${mealsValue}`)) {
-        alert('add a different meal.');
-        return;
-    }
-
-    // Check if the meal contains only text
-    const regex = /^[a-zA-Z\s]+$/;
-    if (!regex.test(mealsValue)) {
-        alert('enter only text.');
-        return;
-    }
-
-    addItemToList('meals', `Meals: ${mealsValue}`);
-    
-    // Save data to local storage
-    const userData = getUserData();
-    userData.meals = mealsValue;
-    saveUserData(userData);
-
-    // Clear the form
-    document.getElementById('mealsForm').reset();
-}
-function addExercise() {
-    const exerciseName = document.getElementById('exerciseName').value.trim();
-    
-    // Check if exerciseName is empty or contains numbers or icons
-    if (exerciseName === "" || /[0-9!@#$%^&*()_+={}|[\]\\';:"<>?]/.test(exerciseName)) {
-        alert('enter a valid exercise.');
-        return;
-    }
-
-    // Check if the exercise name is already added
-    const exerciseList = document.getElementById('exerciseList').innerText;
-    if (exerciseList.includes(`Exercise: ${exerciseName}`)) {
-        alert('add a different exercise.');
-        return;
-    }
-    
-    // Add exercise to the list
-    addItemToList('exercise', `Exercise: ${exerciseName}`);
-    
-    // Save data to local storage
-    const userData = getUserData();
-    userData.exercise = exerciseName;
-    saveUserData(userData);
-
-    // Clear the form
-    document.getElementById('exerciseForm').reset();
-}
-function addReps() {
-    const repsInput = document.getElementById('reps');
-    const reps = repsInput.value.trim();
-    
-    // Check if reps is not empty before proceeding
-    if (reps === "") {
-        alert('Please enter a value for Reps.');
-        return;
-    }
-
-    // Check if the input is a valid number
-    if (isNaN(reps)) {
-        alert('Please enter a valid number for Reps.');
-        return;
-    }
-
-    // Check if reps is within the range of 1 to 1000
-    const numericReps = parseInt(reps, 10);
-    if (numericReps < 1 || numericReps > 1000) {
-        alert('Reps must be a number between 1 and 1000.');
-        return;
-    }
-
-    // Retrieve previously entered reps
-    const previousReps = JSON.parse(localStorage.getItem('previousReps')) || [];
-
-    // Check if reps is in the list of previous reps
-    if (previousReps.includes(reps)) {
-        alert('Please enter a different Reps value.');
-        return;
-    }
-
-    // Add the current reps to the list of previous reps
-    previousReps.push(reps);
-    localStorage.setItem('previousReps', JSON.stringify(previousReps));
-
-    addItemToList('exercise', `Reps: ${reps}`);
-    
-    // Save data to local storage
-    const userData = getUserData();
-    userData.reps = reps;
-    saveUserData(userData);
-
-    // Clear the form
-    document.getElementById('repsForm').reset();
-}
-
-// Define a set to store entered times
-const enteredTimes = new Set();
-
-function addTime() {
-    const time = document.getElementById('time').value;
-
-    // Check if time is not empty before proceeding
-    if (time.trim() === "") {
-        alert('Please enter a value for Time.');
-        return;
-    }
-
-    // Check if the time is already entered
-    if (enteredTimes.has(time)) {
-        alert('Please enter a different time.');
-        return;
-    }
-
-    // Check if the time is within the range of 1 to 1000
-    const numericTime = parseInt(time, 10);
-    if (isNaN(numericTime) || numericTime < 1 || numericTime > 1000) {
-        alert('Time must be a number between 1 and 1000.');
-        return;
-    }
-
-    // Add the time to the set of entered times
-    enteredTimes.add(time);
-
-    addItemToList('exercise', `Time: ${time}`);
-    
-    // Save data to local storage
-    const userData = getUserData();
-    userData.time = time;
-    saveUserData(userData);
-
-    // Clear the form
-    document.getElementById('timeForm').reset();
-}
-function addSleep() {
-    const sleepDuration = document.getElementById('sleepDuration').value;
-
-    // Check if sleepDuration is not empty before proceeding
-    if (sleepDuration.trim() === "") {
-        alert('Please enter a value for Sleep Duration.');
-        return;
-    }
-
-    // Check if the input contains only numbers
-    if (!isValidInput(sleepDuration)) {
-        alert('Please enter a valid number for Sleep Duration.');
-        return;
-    }
-
-    // Check if sleepDuration is within the range of 1 to 1000
-    const duration = parseInt(sleepDuration, 10);
-    if (duration < 1 || duration > 1000) {
-        alert('Sleep Duration must be a number between 1 and 1000.');
-        return;
-    }
-
-    // Check if sleepDuration is not the same as the previously added sleep duration
-    const previousSleepDuration = localStorage.getItem('previousSleepDuration');
-    if (previousSleepDuration === sleepDuration) {
-        alert('Please add a different sleep time.');
-        return;
-    }
-
-    addItemToList('health', `Sleep: ${sleepDuration} hours`);
-
-    // Save data to local storage
-    const userData = getUserData();
-    userData.sleep = sleepDuration;
-    saveUserData(userData);
-
-    // Save current sleep duration as previous for future comparison
-    localStorage.setItem('previousSleepDuration', sleepDuration);
-
-    // Clear the form
-    document.getElementById('healthForm').reset();
-}
-
-// Function to check if the input contains only numbers
-function isValidInput(input) {
-    return /^\d+$/.test(input);
-}
-document.addEventListener('DOMContentLoaded', function () {
-    const userData = getUserData();
-    if (userData.weight) {
-        addItemToList('health', `Weight: ${userData.weight} lbs`);
-    }
-    if (userData.height) {
-        addItemToList('health', `Height: ${userData.height} inches`);
-    }
-    if (userData.option) {
-        addItemToList('meal', `Option: ${userData.option}`);
-    }
-    if (userData.sleep) {
-        addItemToList('health', `Sleep: ${userData.sleep} hours`);
-    }
-    if (userData.exercise) {
-        addItemToList('exercise', `Exercise: ${userData.exercise}`);
-    }
-    if (userData.reps) {
-        addItemToList('exercise', `Reps: ${userData.reps}`);
-    }
-    if (userData.time) {
-        addItemToList('exercise', `Time: ${userData.time}`);
-    }
-
-    const metricTypeInput = document.getElementById('metricType');
-    const metricValueInput = document.getElementById('metricValue');
-    const addMetricBtn = document.getElementById('addMetricBtn');
-    const metricList = document.getElementById('metricList');
-
-    addMetricBtn.addEventListener('click', function () {
-        const metricTypeValue = metricTypeInput.value;
-        const metricValue = metricValueInput.value;
-
-        if (metricTypeValue && metricValue) {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${metricTypeValue}: ${metricValue}`;
-            metricList.appendChild(listItem);
-
-            metricTypeInput.value = 'calories'; // Reset metric type to 'Calories' after adding a metric
-            metricValueInput.value = ''; // Clear metric value input field
-        } else {
-            alert('Please select a metric type and enter a value.');
+async function deleteAccount() {
+    const confirmed = confirm("Do You Want To Delete Your Account?");
+        if (!confirmed) {
+            return;
         }
-    });
-});
+    
+        const username = prompt("Enter Your Username");
+        if (username === null) {
+            return;
+        }
+        try {
+            const response = await fetch('DeleteUsers.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username })
+            });
+    
+            const result = await response.json();
+    
+            if (result.status === 'Success') {
+                alert(result.message);
+                window.location.href = 'index.html';
+            } else {
+                alert(result.message);
+                window.location.href = 'index.html';
+            }
+        } catch (error) {
+            console.error('Error Deleting Account:', error);
+            alert('An Error Occurred.');
+            window.location.href = 'index.html';
+        }
+    }
+    async function addExercise(event) {
+        event.preventDefault();
+    
+        // Get the form data
+        const formData = new FormData(document.getElementById('exerciseForm'));
+    
+        // Check if all metrics are filled
+        if (!formData.get('exerciseName') || !formData.get('reps') || !formData.get('time')) {
+            alert("Enter your Metrics.");
+            return;
+        }
+    
+        // Send the form data via fetch API
+        fetch('SaveExercise.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                // Create a new list item for the added exercise
+                const exerciseList = document.getElementById('exerciseList');
+                const newItem = document.createElement('div');
+                newItem.className = 'p-4 mb-4 border rounded-md';
+                newItem.innerHTML = `Exercise: ${formData.get('exerciseName')}, Reps: ${formData.get('reps')}, Time: ${formData.get('time')} 
+                <button onclick="deleteExercise(${data.id})" class="ml-4 text-red-500">Delete</button>`;
+                exerciseList.appendChild(newItem);
+            }
+            // Display an alert with the message
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while saving the exercise.');
+        });
+    }
+    
+    function deleteExercise(id) {
+        fetch('DeleteExercise.php', {
+            method: 'POST',
+            body: JSON.stringify({ id: id }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                location.reload();
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the exercise.');
+        });
+    }
+    async function addMeal(event) {
+        event.preventDefault(); // Prevent the default form submission
+    
+        // Get the form data
+        const formData = new FormData(document.getElementById('mealsForm'));
+    
+        // Send the form data via fetch API
+        fetch('SaveMeals.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                // Create a new list item for the added meal
+                const mealList = document.getElementById('mealList');
+                const newItem = document.createElement('div');
+                newItem.className = 'p-4 mb-4 border rounded-md';
+                newItem.textContent = `Meal: ${formData.get('mealsValue')}, Calories: ${formData.get('calories')}, Time: ${formData.get('mealTime')}`;
+                mealList.appendChild(newItem);
+            }
+            // Display an alert with the message
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while saving the meal.');
+        });
+    }
