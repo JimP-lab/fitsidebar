@@ -11,83 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="settings.css">
     <link rel="stylesheet" href="tables.css">
-    <script src="tables.js"></script>
     <script src="settings.js"></script>
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .sidebar {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #343a40;
-            padding: 10px 0;
-            display: flex;
-            justify-content: space-around;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-        }
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: calc(100vh - 60px);
-            text-align: center;
-            padding: 20px;
-        }
-        .hidden {
-            display: none;
-        }
-        .options-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-        .options-container .option {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 100%;
-            max-width: 400px;
-            background-color: #343a40;
-            padding: 10px;
-            border-radius: 10px;
-            color: white;
-        }
-        .options-container button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-        .options-container button:hover {
-            background-color: #0056b3;
-        }
-        .logout-button {
-            background-color: #343a40;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            max-width: 400px;
-        }
-        .logout-button:hover {
-            background-color: #6c757d;
-        }
-    </style>
+    <script src="tables.js"></script>
 </head>
 <body class="bg-light text-dark">
     <div class="content" id="content">
@@ -107,83 +32,109 @@
         function showContent(option) {
             var contentDiv = document.getElementById("content");
             var text = "";
-            switch(option) {
+            // Check which option was clicked and display corresponding content
+            switch (option) {
                 case 'tracking':
-                    text = `<div class="container">
-                                <div class="row">
-                                    <!-- Exercise Category -->
-                                    <div class="col-md-4 mb-4">
-                                        <h2 class="text-2xl font-bold mb-4">Exercise</h2>
-                                        <button class="btn btn-primary mb-4" onclick="showForm('exerciseForm')">Exercise</button>
-                                        <button class="btn btn-primary mb-4" onclick="showForm('repsForm')">Reps</button>
-                                        <button class="btn btn-primary mb-4" onclick="showForm('timeForm')">Time</button>
-                                        <form id="exerciseForm" class="hidden">
-                                            <label for="exerciseName" class="form-label">Exercise</label>
-                                            <input type="text" id="exerciseName" name="exerciseName" class="form-control">
-                                            <button type="button" class="btn btn-primary mt-4" onclick="addExercise()">Add Exercise</button>
-                                        </form>
-                                        <form id="repsForm" class="hidden">
-                                            <label for="reps" class="form-label">Reps</label>
-                                            <input type="number" id="reps" name="reps" class="form-control">
-                                            <button type="button" class="btn btn-primary mt-4" onclick="addReps()">Add Reps</button>
-                                        </form>
-                                        <form id="timeForm" class="hidden">
-                                            <label for="time" class="form-label">Time</label>
-                                            <input type="text" id="time" name="time" class="form-control">
-                                            <button type="button" class="btn btn-primary mt-4" onclick="addTime()">Add Time</button>
-                                        </form>
-                                        <ul id="exerciseList" class="list-group"></ul>
-                                    </div>
-                                    <!-- Meals Category -->
-                                    <div class="col-md-4 mb-4">
-                                        <h2 class="text-2xl font-bold mb-4">Meals</h2>
-                                        <button class="btn btn-primary mb-4" onclick="showForm('mealsForm')">Meals</button>
-                                        <form id="mealsForm" class="hidden">
-                                            <label for="mealsValue" class="form-label">Meals</label>
-                                            <input type="text" id="mealsValue" name="mealsValue" class="form-control">
-                                            <button type="button" class="btn btn-primary mt-4" onclick="addMeals()">Add Meals</button>
-                                        </form>
-                                        <ul id="mealsList" class="list-group"></ul>
-                                    </div>
-                                    <!-- Health Category -->
-                                    <div class="col-md-4 mb-4">
-                                        <h2 class="text-2xl font-bold mb-4">Health</h2>
-                                        <button class="btn btn-purple mb-4" onclick="showForm('sleepForm')">Sleep</button>
-                                        <form id="sleepForm" class="hidden">
-                                            <label for="sleepDuration" class="form-label">Sleep Duration (hours)</label>
-                                            <input type="number" id="sleepDuration" name="sleepDuration" class="form-control">
-                                            <button type="button" class="btn btn-purple mt-4" onclick="addSleep()">Add Sleep</button>
-                                        </form>
-                                        <ul id="healthList" class="list-group"></ul>
-                                    </div>
-                                </div>
-                            </div>`;
+                    text = `
+                        <table class="table mb-8">
+                            <tr>
+                                <td class="pr-4">
+                                    <h2 class="text-2xl font-bold mb-4">Exercise</h2>
+                                    <form id="exerciseForm" method="post">
+                                        <label for="exerciseName" class="block text-sm font-medium text-gray-600">Exercise</label>
+                                        <input type="text" id="exerciseName" name="exerciseName" class="mt-1 p-2 w-full border rounded-md">
+                                        <label for="reps" class="block text-sm font-medium text-gray-600">Reps</label>
+                                        <input type="number" id="reps" name="reps" class="mt-1 p-2 w-full border rounded-md">
+                                        <label for="time" class="block text-sm font-medium text-gray-600">Time</label>
+                                        <input type="number" id="time" name="time" class="mt-1 p-2 w-full border rounded-md">
+                                        <button type="submit" class="btn btn-primary mt-4" onclick="addExercise(event)">Add Exercise</button>
+                                    </form>
+                                </td>
+                                <td class="pr-4">
+                                    <h2 class="text-2xl font-bold mb-4">Meals</h2>
+                                    <form id="mealsForm" method="post">
+                                        <label for="mealsValue" class="block text-sm font-medium text-gray-600">Meals</label>
+                                        <input type="text" id="mealsValue" name="mealsValue" class="mt-1 p-2 w-full border rounded-md">
+                                        <label for="calories" class="block text-sm font-medium text-gray-600">Calories</label>
+                                        <input type="number" id="calories" name="calories" class="mt-1 p-2 w-full border rounded-md">
+                                        <label for="mealTime" class="block text-sm font-medium text-gray-600">Time</label>
+                                        <input type="time" id="mealTime" name="mealTime" class="mt-1 p-2 w-full border rounded-md">
+                                        <button type="submit" class="btn btn-primary mt-4" onclick="addMeal(event)">Add Meal</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <h2 class="text-2xl font-bold mb-4">Health</h2>
+                                    <form id="healthForm" method="post">
+                                        <label for="sleepDuration" class="block text-sm font-medium text-gray-600">Sleep Duration (hours)</label>
+                                        <input type="number" id="sleepDuration" name="sleepDuration" class="mt-1 p-2 w-full border rounded-md" required>
+                                        <label for="weight" class="block text-sm font-medium text-gray-600">Weight (kg)</label>
+                                        <input type="number" id="weight" name="weight" class="mt-1 p-2 w-full border rounded-md" required>
+                                        <label for="height" class="block text-sm font-medium text-gray-600">Height (cm)</label>
+                                        <input type="number" id="height" name="height" class="mt-1 p-2 w-full border rounded-md" required>
+                                        <button type="submit" class="btn btn-primary mt-4" onclick="addHealth(event)">Add Health</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>`;
                     break;
                 case 'profile':
                     text = `
-                            <div class="options-container">
+                         <div class="options-container">
                                 <div class="option">
                                     <span>Change Password</span>
-                                    <button class="btn btn-primary" onclick="changePassword()">Change Password</button>
+                                    <button onclick="changePassword()">Change Password</button>
                                 </div>
                                 <div class="option">
                                     <span>Contact Support</span>
-                                    <button class="btn btn-primary" onclick="contactSupport()">Contact Support</button>
+                                    <button onclick="contactSupport()">Contact Support</button>
                                 </div>
                                 <div class="option">
                                     <span>Delete Account</span>
-                                    <button class="btn btn-danger" onclick="deleteAccount()">Delete Account</button>
+                                    <button onclick="deleteAccount()">Delete Account</button> 
                                 </div>
                                 <div class="option">
-                                    <button class="btn btn-secondary logout-button" onclick="logout()">Log Out</button>
+                                    <button onclick="logout()">Log Out</button>
                                 </div>
                             </div>`;
                     break;
-                default:
             }
-
             contentDiv.innerHTML = text;
         }
-    </script>
+        function addHealth(event) {
+        event.preventDefault(); // Prevent the default form submission
+    
+        // Get the form data
+        const formData = new FormData(document.getElementById('healthForm'));
+    
+        // Validate if all fields are filled
+        if (!formData.get('sleepDuration') || !formData.get('weight') || !formData.get('height')) {
+            alert("Enter your metrics");
+            return;
+        }
+    
+        // Send the form data via fetch API
+        fetch('SaveHealth.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                // Create a new list item for the added health data
+                const healthList = document.getElementById('healthList');
+                const newItem = document.createElement('div');
+                newItem.className = 'p-4 mb-4 border rounded-md';
+                newItem.textContent = `Sleep Duration: ${formData.get('sleepDuration')} hours, Weight: ${formData.get('weight')} kg, Height: ${formData.get('height')} cm`;
+                healthList.appendChild(newItem);
+            }
+            // Display an alert with the message
+            alert(data.message);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while saving the health data.');
+        });
+    }
+ </script>
 </body>
 </html>
