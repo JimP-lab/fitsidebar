@@ -5,7 +5,7 @@ function changePassword() {
 }
 function contactSupport() {
     // Add logic to redirect to email for support
-    window.location.href = "index5.html";
+    window.location.href = "settings3.html";
 }
 function logout() {
     const confirmLogout = confirm('Do you want to log out?');
