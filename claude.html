@@ -39,10 +39,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
             <div class="navbar-nav flex-grow-1 justify-content-center">
-                <a class="nav-link" href="#" onclick="showContent('home')">
-                    <i class="fas fa-home"></i> Home
-                </a>
-                <a class="nav-link" href="#" onclick="showContent('tables')">
+            <a class="nav-link" href="#" onclick="showContent('tables')">
                     <i class="fas fa-table"></i> Tables
                 </a>
             </div>
@@ -233,9 +230,54 @@
             profilePicElements.forEach(el => el.src = currentProfilePicture);
         }
 
-        function logout() {
-            alert('Logout functionality to be implemented');
+         function addNewTable() {
+            const tableName = document.getElementById('tableName').value;
+            const columnCount = parseInt(document.getElementById('columnCount').value);
+            
+            if (!tableName || isNaN(columnCount) || columnCount < 1 || columnCount > 5) {
+                alert('Please enter valid table name and column count (1-5)');
+                return;
+            }
+
+            tableCount++;
+            const tableId = `table-${tableCount}`;
+            const tableHtml = `
+                <div class="card table-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">${tableName}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="${tableId}">
+                                <thead>
+                                    <tr>
+                                        ${Array(columnCount).fill().map((_, i) => `<th>Column ${i + 1}</th>`).join('')}
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        ${Array(columnCount).fill().map(() => '<td contenteditable="true"></td>').join('')}
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="deleteRow(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-success mt-2" onclick="addRow('${tableId}')">
+                            <i class="fas fa-plus"></i> Add Row
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('tableContainer').insertAdjacentHTML('beforeend', tableHtml);
+            document.getElementById('addTableModal').querySelector('.btn-close').click();
         }
+
         function addRow(tableId) {
             const table = document.getElementById(tableId);
             const columnCount = table.rows[0].cells.length - 1;
@@ -252,11 +294,6 @@
                     <i class="fas fa-trash"></i>
                 </button>
             `;
-        }
-
-        function deleteRow(btn) {
-            const row = btn.closest('tr');
-            row.remove();
         }
         // Initialize with home content
         showContent('home');
