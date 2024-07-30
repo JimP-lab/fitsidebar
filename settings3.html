@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mobile Tables</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            padding-bottom: 70px;
+        }
+        .navbar-nav {
+            width: 100%;
+            justify-content: center;
+        }
+        .dropup .dropdown-menu {
+            bottom: 100%;
+            top: auto;
+        }
+        .table-card {
+            margin-bottom: 20px;
+        }
+        .table-responsive {
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-3 mb-5">
+        <div id="contentArea"></div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fab fa-slack"></i> Slack
+            </a>
+            <div class="navbar-nav flex-grow-1 justify-content-center">
+                <a class="nav-link" href="#" onclick="showContent('home')">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a class="nav-link" href="#" onclick="showContent('tables')">
+                    <i class="fas fa-table"></i> Tables
+                </a>
+                <a class="nav-link" href="#" onclick="showContent('settings')">
+                    <i class="fas fa-cog"></i> Settings
+                </a>
+            </div>
+            <div class="dropup">
+                <a href="#" class="dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser2">
+                    <li><a class="dropdown-item" href="#">New project...</a></li>
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Add Table Modal -->
+    <div class="modal fade" id="addTableModal" tabindex="-1" aria-labelledby="addTableModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTableModalLabel">Add New Table</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="tableName" class="form-label">Table Name</label>
+                        <input type="text" class="form-control" id="tableName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="columnCount" class="form-label">Number of Columns</label>
+                        <input type="number" class="form-control" id="columnCount" min="1" max="5" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addNewTable()">Add Table</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let tableCount = 0;
+
+        function showContent(page) {
+            const contentArea = document.getElementById('contentArea');
+            let content = '';
+
+            switch(page) {
+                case 'home':
+                    content = '<h2 class="mb-4">Home</h2><p>Welcome to the home page!</p>';
+                    break;
+                case 'tables':
+                    content = `
+                        <h2 class="mb-4">Table Metrics</h2>
+                        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addTableModal">
+                            <i class="fas fa-plus"></i> Add Table
+                        </button>
+                        <div id="tableContainer"></div>
+                    `;
+                    break;
+                case 'settings':
+                    content = `
+                        <h2 class="mb-4">Settings</h2>
+                        <div class="list-group settings-list">
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Account</h5>
+                                    <small><i class="fas fa-chevron-right"></i></small>
+                                </div>
+                                <p class="mb-1">Manage your account settings and preferences</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Privacy</h5>
+                                    <small><i class="fas fa-chevron-right"></i></small>
+                                </div>
+                                <p class="mb-1">Control your privacy settings</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Notifications</h5>
+                                    <small><i class="fas fa-chevron-right"></i></small>
+                                </div>
+                                <p class="mb-1">Customize your notification preferences</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Security</h5>
+                                    <small><i class="fas fa-chevron-right"></i></small>
+                                </div>
+                                <p class="mb-1">Manage your security settings</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action text-danger">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Log Out</h5>
+                                    <small><i class="fas fa-sign-out-alt"></i></small>
+                                </div>
+                            </a>
+                        </div>
+                    `;
+                    break;
+                default:
+                    content = '<h2 class="mb-4">404</h2><p>Page not found</p>';
+            }
+
+            contentArea.innerHTML = content;
+        }
+
+        function addNewTable() {
+            const tableName = document.getElementById('tableName').value;
+            const columnCount = parseInt(document.getElementById('columnCount').value);
+            
+            if (!tableName || isNaN(columnCount) || columnCount < 1 || columnCount > 5) {
+                alert('Please enter valid table name and column count (1-5)');
+                return;
+            }
+
+            tableCount++;
+            const tableId = `table-${tableCount}`;
+            const tableHtml = `
+                <div class="card table-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">${tableName}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="${tableId}">
+                                <thead>
+                                    <tr>
+                                        ${Array(columnCount).fill().map((_, i) => `<th>Column ${i + 1}</th>`).join('')}
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        ${Array(columnCount).fill().map(() => '<td contenteditable="true"></td>').join('')}
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" onclick="deleteRow(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-success mt-2" onclick="addRow('${tableId}')">
+                            <i class="fas fa-plus"></i> Add Row
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('tableContainer').insertAdjacentHTML('beforeend', tableHtml);
+            document.getElementById('addTableModal').querySelector('.btn-close').click();
+        }
+
+        function addRow(tableId) {
+            const table = document.getElementById(tableId);
+            const columnCount = table.rows[0].cells.length - 1;
+            const newRow = table.insertRow(-1);
+            
+            for (let i = 0; i < columnCount; i++) {
+                const cell = newRow.insertCell(i);
+                cell.contentEditable = true;
+            }
+
+            const actionsCell = newRow.insertCell(-1);
+            actionsCell.innerHTML = `
+                <button class="btn btn-sm btn-danger" onclick="deleteRow(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+        }
+
+        function deleteRow(btn) {
+            const row = btn.closest('tr');
+            row.remove();
+        }
+
+        // Initialize with home content
+        showContent('home');
+    </script>
+</body>
+</html>
