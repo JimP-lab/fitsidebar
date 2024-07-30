@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard with Settings</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .navbar-nav {
+            width: 100%;
+            justify-content: center;
+        }
+        .dropup .dropdown-menu {
+            bottom: 100%;
+            top: auto;
+        }
+        .settings-card {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5 mb-5">
+        <div id="contentArea"></div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fab fa-slack"></i> Slack
+            </a>
+            <div class="navbar-nav flex-grow-1 justify-content-center">
+                <a class="nav-link" href="#" onclick="showContent('home')">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a class="nav-link" href="#" onclick="showContent('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </a>
+            </div>
+            <div class="dropup">
+                <a href="#" class="dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser2">
+                    <li><a class="dropdown-item" href="#">New project...</a></li>
+                    <li><a class="dropdown-item" href="#">Settings</a></li>
+                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showContent(page) {
+            const contentArea = document.getElementById('contentArea');
+            let content = '';
+
+            switch(page) {
+                case 'home':
+                    content = '<h2 class="text-center mb-4">Home Content</h2><p>Welcome to the home page!</p>';
+                    break;
+                case 'dashboard':
+                    content = `
+                        <h2 class="text-center mb-4">Settings</h2>
+                        <div class="card settings-card">
+                            <div class="card-body">
+                                <div class="d-grid gap-3">
+                                    <button class="btn btn-outline-primary" onclick="changePassword()">
+                                        <i class="fas fa-key me-2"></i>Change Password
+                                    </button>
+                                    <button class="btn btn-outline-info" onclick="contactSupport()">
+                                        <i class="fas fa-headset me-2"></i>Contact Support
+                                    </button>
+                                    <button class="btn btn-outline-danger" onclick="deleteAccount()">
+                                        <i class="fas fa-user-times me-2"></i>Delete Account
+                                    </button>
+                                    <button class="btn btn-outline-secondary" onclick="logout()">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Log Out
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                default:
+                    content = '<h2 class="text-center mb-4">404</h2><p>Page not found</p>';
+            }
+
+            contentArea.innerHTML = content;
+        }
+
+        function changePassword() {
+            alert('Change Password functionality to be implemented');
+        }
+
+        function contactSupport() {
+            alert('Contact Support functionality to be implemented');
+        }
+
+        function deleteAccount() {
+            alert('Delete Account functionality to be implemented');
+        }
+
+        function logout() {
+            alert('Logout functionality to be implemented');
+        }
+
+        // Initialize with home content
+        showContent('home');
+    </script>
+</body>
+</html>
