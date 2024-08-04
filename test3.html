@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Metrics</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .table-responsive {
+            max-height: 150px; /* Adjust height to fit your needs */
+            overflow-y: auto;
+        }
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .table-wrapper {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .form-wrapper {
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <nav>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showContent('home')">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showContent('tables')">Tables</a>
+                </li>
+            </ul>
+        </nav>
+        <div id="content" class="mt-4"></div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        const contentArea = document.getElementById('content');
+
+        function showContent(section) {
+            let content = '';
+            switch (section) {
+                case 'home':
+                    content = '<h2>Welcome to the Home Page</h2><p>Select a section from the navigation menu.</p>';
+                    break;
+                case 'tables':
+                    content = `
+                        <h2 class="mb-4">Table Metrics</h2>
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Exercise</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-wrapper">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="exerciseTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Exercise Name</th>
+                                                            <th>Reps</th>
+                                                            <th>Time</th>
+                                                            <th>Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="form-wrapper">
+                                            <form id="exerciseForm" class="mt-3">
+                                                <input type="text" class="form-control mb-2" id="exerciseName" placeholder="Exercise Name">
+                                                <input type="number" class="form-control mb-2" id="exerciseReps" placeholder="Reps">
+                                                <input type="number" class="form-control mb-2" id="exerciseTime" placeholder="Time (minutes)">
+                                                <button type="button" class="btn btn-primary" onclick="addExercise()">Add Exercise</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Meals</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-wrapper">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="mealsTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Meal</th>
+                                                            <th>Calories</th>
+                                                            <th>Time</th>
+                                                            <th>Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="form-wrapper">
+                                            <form id="mealsForm" class="mt-3">
+                                                <input type="text" class="form-control mb-2" id="mealName" placeholder="Meal Name">
+                                                <input type="number" class="form-control mb-2" id="mealCalories" placeholder="Calories">
+                                                <input type="time" class="form-control mb-2" id="mealTime">
+                                                <button type="button" class="btn btn-primary" onclick="addMeal()">Add Meal</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="mb-0">Health</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-wrapper">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered" id="healthTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Sleep (hours)</th>
+                                                            <th>Weight (kg)</th>
+                                                            <th>Height (cm)</th>
+                                                            <th>Actions</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="form-wrapper">
+                                            <form id="healthForm" class="mt-3">
+                                                <input type="number" class="form-control mb-2" id="sleepDuration" placeholder="Sleep Duration (hours)">
+                                                <input type="number" class="form-control mb-2" id="weight" placeholder="Weight (kg)">
+                                                <input type="number" class="form-control mb-2" id="height" placeholder="Height (cm)">
+                                                <button type="button" class="btn btn-primary" onclick="addHealth()">Add Health Data</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+            contentArea.innerHTML = content;
+        }
+
+        function addExercise() {
+            const name = document.getElementById('exerciseName').value;
+            const reps = document.getElementById('exerciseReps').value;
+            const time = document.getElementById('exerciseTime').value;
+            if (name && reps && time) {
+                addRow('exerciseTable', [name, reps, time]);
+                document.getElementById('exerciseForm').reset();
+            }
+        }
+
+        function addMeal() {
+            const name = document.getElementById('mealName').value;
+            const calories = document.getElementById('mealCalories').value;
+            const time = document.getElementById('mealTime').value;
+            if (name && calories && time) {
+                addRow('mealsTable', [name, calories, time]);
+                document.getElementById('mealsForm').reset();
+            }
+        }
+
+        function addHealth() {
+            const sleep = document.getElementById('sleepDuration').value;
+            const weight = document.getElementById('weight').value;
+            const height = document.getElementById('height').value;
+            if (sleep && weight && height) {
+                addRow('healthTable', [sleep, weight, height]);
+                document.getElementById('healthForm').reset();
+            }
+        }
+
+        function addRow(tableId, data) {
+            const table = document.getElementById(tableId);
+            const newRow = table.insertRow(-1);
+            data.forEach((value, index) => {
+                const cell = newRow.insertCell(index);
+                cell.textContent = value;
+            });
+            const actionsCell = newRow.insertCell(-1);
+            actionsCell.innerHTML = `
+                <button class="btn btn-sm btn-danger" onclick="deleteRow(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
+        }
+
+        function deleteRow(btn) {
+            const row = btn.closest('tr');
+            row.remove();
+        }
+
+        // Initialize with home content
+        showContent('home');
+    </script>
+</body>
+</html>
