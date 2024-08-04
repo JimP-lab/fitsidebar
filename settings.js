@@ -1,7 +1,7 @@
 
 function changePassword() {
     // Redirect user to the index1 file 
-    window.location.href = "claude.html";
+    window.location.href = "test3.html";
 }
 function contactSupport() {
     // Add logic to redirect to email for support
